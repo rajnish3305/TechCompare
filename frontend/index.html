@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCompare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>TechCompare</h1>
+        <a href="favorites.html" class="favorites-link"> ❤️ Favorites
+        </a>
+        <div id="userArea"></div>
+        <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+    </header>
+    <main>
+        <h2>Products</h2>
+        <input type="text" id="searchInput" placeholder="Search products...">
+        <select id="categoryFilter">
+            <option value="All">All Categories</option>
+            <option value="Smartphone">Smartphone</option>
+            <option value="Laptop">Laptop</option>
+            <option value="Headphone">Headphone</option>
+        </select>
+        <section id="compareSection">
+            <h2>Compare Products</h2>
+            <p>
+                Selected Products:
+                <span id="compareCount">0</span>
+            </p>
+            <div id="compareList"></div>
+            <button id="compareButton" onclick="showComparison()"> Compare Now </button>
+            <div id="comparisonTable"></div>
+            <div id="recommendationSection"></div>
+        </section>
+        <div id="products"></div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+.admin-section {
+    background: white;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 18px;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.08);
+}
+.admin-section h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+#productForm {
+    display: grid;
+    grid-template-columns:
+        repeat(2, 1fr);
+    gap: 15px;
+
+    
+}
+#productForm input {
+    padding: 13px;
+    border:
+        1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    align-self: self-start;
+}
+#productForm h3 {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+}
+#productForm button {
+    grid-column: 1 / -1;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: #162338;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+#productForm button:hover {
+    background: #2563eb;
+}
+#adminProducts {
+    display: grid;
+    gap: 15px;
+}
+.admin-product-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border:
+        1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #f8fafc;
+}
+.admin-product-card h3 {
+    margin-top: 0;
+}
+.admin-product-card button {
+    padding: 9px 14px;
+    margin: 4px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    background: #162338;
+    cursor: pointer;
+}
+.admin-product-card button:hover {
+    background: #2563eb;
+}
+body.dark .admin-section {
+    background: #111c2e;
+    color: #f1f5f9;
+}
+body.dark #productForm input {
+    background: #162338;
+    color: white;
+    border-color: #334e68;
+}
+body.dark .admin-product-card {
+    background: #162338;
+    border-color: #334e68;
+}
+@media (max-width: 700px) {
+    #productForm {
+        grid-template-columns: 1fr;
+    }
+    .admin-product-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background:
+        rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.edit-modal.active {
+    display: flex;
+}
+.edit-modal-content {
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow:
+        0 20px 60px
+        rgba(0, 0, 0, 0.25);
+}
+.edit-modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+#editProductForm {
+    display: grid;
+    grid-template-columns:
+        repeat(2, 1fr);
+    gap: 15px;
+}
+#editProductForm input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border:
+        1px solid #d1d5db;
+    border-radius: 9px;
+    font-size: 14px;
+}
+#editProductForm h3 {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+}
+.edit-modal-buttons {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.edit-modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 9px;
+    background: #162338;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+.edit-modal-buttons button:hover {
+    background: #2563eb;
+}
+body.dark .edit-modal-content {
+    background: #111c2e;
+    color: #f1f5f9;
+}
+body.dark #editProductForm input {
+    background: #162338;
+    color: white;
+    border-color: #334e68;
+}
+@media (max-width: 600px) {
+    #editProductForm {
+        grid-template-columns: 1fr;
+    }
+    .edit-modal-content {
+        padding: 20px;
+    }
+}
+
+
+.image-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+   
+}
+.image-input-group label {
+    font-weight: 600;
+}
+.image-preview {
+    display: none;
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 10px;
+    background: #f8fafc;
+}
+
+
+#adminSearch {
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    padding: 13px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+}
+#adminSearch:focus {
+    border-color: #2563eb;
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.1);
+}
+body.dark #adminSearch {
+    background: #162338;
+    color: white;
+    border-color: #334e68;
+}
+body.dark #adminSearch::placeholder {
+    color: #94a3b8;
+}

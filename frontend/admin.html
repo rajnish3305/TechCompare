@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Admin Dashboard - TechCompare</title>
+    <link rel="stylesheet" href="admin.css">
+
+</head>
+<body>
+    <header>
+        <h1>
+            TechCompare Admin
+        </h1>
+        <button onclick="logoutAdmin()">
+            Logout
+        </button>
+    </header>
+    <main>
+        <!-- ADD PRODUCT -->
+        <section class="admin-section">
+            <h2>
+                ➕ Add Product
+            </h2>
+            <form id="productForm">
+                <input
+                    type="text"
+                    id="productName"
+                    placeholder="Product Name"
+                    required
+                >
+                <input
+                    type="text"
+                    id="brand"
+                    placeholder="Brand"
+                    required
+                >
+                <input
+                    type="text"
+                    id="category"
+                    placeholder="Category"
+                    required
+                >
+                <input
+                    type="number"
+                    id="price"
+                    placeholder="Price"
+                    required
+                >
+                <input
+                    type="number"
+                    step="0.1"
+                    id="rating"
+                    placeholder="Rating"
+                    required
+                >
+                <div class="image-input-group">
+                    <label for="image">
+                        Product Image URL
+                    </label>
+                    <input
+                        type="text"
+                        id="image"
+                        placeholder="Paste image URL"
+                    >
+                    <img
+                        id="imagePreview"
+                        class="image-preview"
+                        src=""
+                        alt="Product Preview"
+                    >
+                </div>
+                <h3>
+                    Specifications
+                </h3>
+                <input
+                    type="text"
+                    id="ram"
+                    placeholder="RAM"
+                >
+                <input
+                    type="text"
+                    id="storage"
+                    placeholder="Storage"
+                >
+                <input
+                    type="text"
+                    id="processor"
+                    placeholder="Processor"
+                >
+                <input
+                    type="text"
+                    id="battery"
+                    placeholder="Battery"
+                >
+                <input
+                    type="text"
+                    id="display"
+                    placeholder="Display"
+                >
+                <input
+                    type="text"
+                    id="camera"
+                    placeholder="Camera"
+                >
+                <button type="submit">
+                    Add Product
+                </button>
+            </form>
+            <p id="productMessage"></p>
+        </section>
+        <!-- PRODUCT LIST -->
+        <section class="admin-section">
+            <h2>
+                📦 Manage Products
+            </h2>
+            <input
+                type="text"
+                id="adminSearch"
+                placeholder="🔍 Search products..."
+            >
+            <div id="adminProducts">
+                <p>
+                    Loading products...
+                </p>
+            </div>
+        </section>
+
+        <!-- EDIT PRODUCT MODAL -->
+        <div id="editModal" class="edit-modal">
+            <div class="edit-modal-content">
+                <h2>✏️ Edit Product</h2>
+                <form id="editProductForm">
+                    <input
+                        type="hidden"
+                        id="editProductId"
+                    >
+                    <input
+                        type="text"
+                        id="editProductName"
+                        placeholder="Product Name"
+                        required
+                    >
+                    <input
+                        type="text"
+                        id="editBrand"
+                        placeholder="Brand"
+                        required
+                    >
+                    <input
+                        type="text"
+                        id="editCategory"
+                        placeholder="Category"
+                        required
+                    >
+                    <input
+                        type="number"
+                        id="editPrice"
+                        placeholder="Price"
+                        required
+                    >
+                    <input
+                        type="number"
+                        step="0.1"
+                        id="editRating"
+                        placeholder="Rating"
+                        required
+                    >
+                    <input
+                        type="text"
+                        id="editImage"
+                        placeholder="Image URL"
+                    >
+                    <img
+                        id="editImagePreview"
+                        class="image-preview"
+                        src=""
+                        alt="Product Preview"
+                    >
+                    <h3>Specifications</h3>
+                    <input
+                        type="text"
+                        id="editRam"
+                        placeholder="RAM"
+                    >
+                    <input
+                        type="text"
+                        id="editStorage"
+                        placeholder="Storage"
+                    >
+                    <input
+                        type="text"
+                        id="editProcessor"
+                        placeholder="Processor"
+                    >
+                    <input
+                        type="text"
+                        id="editBattery"
+                        placeholder="Battery"
+                    >
+                    <input
+                        type="text"
+                        id="editDisplay"
+                        placeholder="Display"
+                    >
+                    <input
+                        type="text"
+                        id="editCamera"
+                        placeholder="Camera"
+                    >
+                    <div class="edit-modal-buttons">
+                        <button type="submit">
+                            Update Product
+                        </button>
+                        <button
+                            type="button"
+                            onclick="closeEditModal()"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="admin.js"></script>
+</body>
+</html>
