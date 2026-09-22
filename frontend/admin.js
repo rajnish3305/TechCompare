@@ -65,7 +65,7 @@ productForm.addEventListener(
         try {
             const response =
                 await fetch(
-                    "http://localhost:5000/api/products",
+                    "https://techcompare-1.onrender.com/api/products",
                     {
                         method: "POST",
                         headers: {
@@ -109,7 +109,7 @@ async function loadProducts() {
     try {
         const response =
             await fetch(
-                "http://localhost:5000/api/products"
+                "https://techcompare-1.onrender.com/api/products"
             );
         const products =
             await response.json();
@@ -331,7 +331,7 @@ editProductForm.addEventListener(
         try {
             const response =
                 await fetch(
-                    `http://localhost:5000/api/products/${productId}`,
+                    `https://techcompare-1.onrender.com/api/products/${productId}`,
                     {
                         method: "PUT",
                         headers: {

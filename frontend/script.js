@@ -1,6 +1,6 @@
 let allProducts = [];
 let compareProducts = [];
-fetch("http://localhost:5000/api/products")
+fetch("https://techcompare-1.onrender.com/api/products")
 
     .then(response => response.json())
 
@@ -516,7 +516,7 @@ async function addToFavorites(productId) {
     const user = JSON.parse(userData);
     try {
         const response = await fetch(
-            "http://localhost:5000/api/favorites",
+            "https://techcompare-1.onrender.com/api/favorites",
             {
                 method: "POST",
                 headers: {
@@ -549,7 +549,7 @@ async function removeFromFavorites(productId) {
     const user = JSON.parse(userData);
     try {
         const response = await fetch(
-            "http://localhost:5000/api/favorites",
+            "https://techcompare-1.onrender.com/api/favorites",
             {
                 method: "DELETE",
                 headers: {
