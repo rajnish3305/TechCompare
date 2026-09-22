@@ -20,6 +20,41 @@
         </button>
     </header>
     <main>
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    📦
+                </div>
+                <div>
+                    <p>Total Products</p>
+                    <h2 id="totalProducts">
+                        0
+                    </h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    📂
+                </div>
+                <div>
+                    <p>Categories</p>
+                    <h2 id="totalCategories">
+                        0
+                    </h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    ⭐
+                </div>
+                <div>
+                    <p>Average Rating</p>
+                    <h2 id="averageRating">
+                        0
+                    </h2>
+                </div>
+            </div>
+        </section>
         <!-- ADD PRODUCT -->
         <section class="admin-section">
             <h2>
@@ -122,6 +157,26 @@
                 id="adminSearch"
                 placeholder="🔍 Search products..."
             >
+            <select id="adminCategoryFilter">
+                <option value="All">All Categories</option>
+            </select>
+            <select id="adminSort">
+                <option value="default">
+                    Sort By
+                </option>
+                <option value="priceLow">
+                    Price: Low → High
+                </option>
+                <option value="priceHigh">
+                    Price: High → Low
+                </option>
+                <option value="ratingHigh">
+                    Rating: High → Low
+                </option>
+                <option value="nameAZ">
+                    Name: A → Z
+                </option>
+            </select>
             <div id="adminProducts">
                 <p>
                     Loading products...

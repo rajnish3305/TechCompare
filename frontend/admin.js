@@ -114,6 +114,8 @@ async function loadProducts() {
         const products =
             await response.json();
         allAdminProducts = products;
+        updateDashboardStats();
+        loadAdminCategories();
         showAdminProducts(allAdminProducts);
     } catch (error) {
         console.log(error);
@@ -417,36 +419,146 @@ editImageInput.addEventListener(
     }
 );
 
-
-
 const adminSearch = document.getElementById("adminSearch");
-adminSearch.addEventListener("input", function () {
-    const searchText = this.value.trim().toLowerCase();
-
-    // Agar search box empty hai
-    if (searchText === "") {
-        showAdminProducts(allAdminProducts);
-        return;
+adminSearch.addEventListener(
+    "input",
+    function () {
+        applyAdminFilters();
     }
+);
 
-    const filteredProducts = allAdminProducts.filter(product => {
-        const name = String(product.name || "").toLowerCase();
-        const brand = String(product.brand || "").toLowerCase();
-        const category = String(product.category || "").toLowerCase();
+function applyAdminFilters() {
+    const searchText = adminSearch.value.toLowerCase().trim();
+    const selectedCategory = adminCategoryFilter.value;
+    const filteredProducts =
+        allAdminProducts.filter(
+            product => {
+                const name =
+                    (product.name || "")
+                        .toLowerCase();
+                const brand =
+                    (product.brand || "")
+                        .toLowerCase();
+                const category =
+                    (product.category || "")
+                        .toLowerCase();
+                const matchesSearch =
+                    name.includes(searchText) ||
+                    brand.includes(searchText) ||
+                    category.includes(searchText);
 
-        return (
-            name.includes(searchText) ||
-            brand.includes(searchText) ||
-            category.includes(searchText)
+                const matchesCategory =
+                    selectedCategory === "all" ||
+                    category === selectedCategory;
+                return (
+                    matchesSearch &&
+                    matchesCategory
+                );
+            }
         );
-    });
-
-    // Search result display karo
-    if (filteredProducts.length > 0) {
-        showAdminProducts(filteredProducts);
-    } else {
-        document.getElementById("adminProducts").innerHTML = `
-            <p>No product found for "${searchText}"</p>
-        `;
+    let sortedProducts = [...filteredProducts];
+        if (adminSort.value === "priceLow") {
+            sortedProducts.sort(
+                (a, b) => a.price - b.price
+            );
+        }
+        else if (adminSort.value === "priceHigh") {
+            sortedProducts.sort(
+                (a, b) => b.price - a.price
+            );
+        }
+        else if (adminSort.value === "ratingHigh") {
+            sortedProducts.sort(
+            (a, b) => b.rating - a.rating
+            );
+        }
+        else if (adminSort.value === "nameAZ") {
+            sortedProducts.sort(
+            (a, b) =>
+            a.name.localeCompare(b.name)
+        );
     }
-});
+    showAdminProducts(sortedProducts);    
+    
+}
+
+const adminCategoryFilter = document.getElementById(
+        "adminCategoryFilter");
+function loadAdminCategories() {
+    const categories =
+        allAdminProducts.map(
+            product => product.category
+        );
+    const uniqueCategories =
+        [...new Set(categories)];
+    uniqueCategories.forEach(
+        category => {
+            const option =
+                document.createElement(
+                    "option"
+                );
+            option.value =
+                category.toLowerCase();
+            option.textContent =
+                category;
+            adminCategoryFilter.appendChild(
+                option
+            );
+        }
+    );
+}
+
+adminCategoryFilter.addEventListener(
+    "change",
+    function () {
+        applyAdminFilters();
+    }
+);
+     
+
+function updateDashboardStats() {
+    const totalProducts =
+        allAdminProducts.length;
+    const categories =
+        allAdminProducts.map(
+            product =>
+                product.category
+        );
+    const uniqueCategories =
+        [...new Set(categories)];
+    let totalRating = 0;
+    allAdminProducts.forEach(
+        product => {
+            totalRating +=
+                Number(product.rating) || 0;
+        }
+    );
+    const averageRating =
+        totalProducts > 0
+            ? (
+                totalRating /
+                totalProducts
+              ).toFixed(1)
+            : 0;
+    document.getElementById(
+        "totalProducts"
+    ).textContent =
+        totalProducts;
+    document.getElementById(
+        "totalCategories"
+    ).textContent =
+        uniqueCategories.length;
+    document.getElementById(
+        "averageRating"
+    ).textContent =
+        averageRating;
+}
+
+const adminSort = document.getElementById("adminSort");
+adminSort.addEventListener(
+    "change",
+    function () {
+        applyAdminFilters();
+    }
+);
+

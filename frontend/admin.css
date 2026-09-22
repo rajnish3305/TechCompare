@@ -234,3 +234,87 @@ body.dark #adminSearch {
 body.dark #adminSearch::placeholder {
     color: #94a3b8;
 }
+
+#adminCategoryFilter {
+    width: 220px;
+    padding: 13px 15px;
+    margin-left: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    background: white;
+    cursor: pointer;
+    outline: none;
+}
+#adminCategoryFilter:focus {
+    border-color: #2563eb;
+}
+body.dark #adminCategoryFilter {
+    background: #162338;
+    color: white;
+    border-color: #334e68;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns:
+        repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px;
+    background: white;
+    border-radius: 15px;
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.08);
+    transition: 0.3s;
+}
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+.stat-icon {
+    font-size: 32px;
+}
+.stat-card p {
+    margin: 0 0 5px;
+    color: #64748b;
+    font-size: 14px;
+}
+.stat-card h2 {
+    margin: 0;
+    font-size: 28px;
+}
+body.dark .stat-card {
+    background: #111c2e;
+    color: white;
+}
+body.dark .stat-card p {
+    color: #94a3b8;
+}
+@media (max-width: 700px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+#adminSort {
+    width: 220px;
+    padding: 13px 15px;
+    margin-left: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    background: white;
+    cursor: pointer;
+    outline: none;
+}
+body.dark #adminSort {
+    background: #162338;
+    color: white;
+    border-color: #334e68;
+}
