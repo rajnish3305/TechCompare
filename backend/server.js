@@ -174,8 +174,7 @@ app.delete("/api/favorites", async (req, res) => {
 app.get("/api/favorites/:userId", async (req, res) => {
     try {
         const { userId } = req.params;
-        const user = await User.findById(userId)
-            .populate("favorites");
+        const user = await User.findById(userId).populate("favorites");
         if (!user) {
             return res.status(404).json({
                 message: "User not found"
@@ -230,7 +229,6 @@ app.put(
     async (req, res) => {
         try {
             const {userId,...productData} = req.body;
-
             const product =
                 await Product.findByIdAndUpdate(
                     req.params.id,
@@ -242,48 +240,40 @@ app.put(
                 );
             if (!product) {
                 return res.status(404).json({
-                    message:
-                        "Product not found"
+                    message: "Product not found"
                 });
             }
             res.status(200).json({
-                message:
-                    "Product updated successfully",
+                message: "Product updated successfully",
                 product: product
             });
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                message:
-                    "Error updating product"
+                message: "Error updating product"
             });
         }
     }
 );
+
 app.delete(
     "/api/products/:id",
     adminMiddleware,
     async (req, res) => {
         try {
-            const product =
-                await Product.findByIdAndDelete(
-                    req.params.id
-                );
+            const product = await Product.findByIdAndDelete(req.params.id);
             if (!product) {
                 return res.status(404).json({
                     message: "Product not found"
                 });
-
             }
             res.status(200).json({
-                message:
-                    "Product deleted successfully"
+                message: "Product deleted successfully"
             });
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                message:
-                    "Error deleting product"
+                message: "Error deleting product"
             });
         }
     }

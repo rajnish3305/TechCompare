@@ -16,7 +16,7 @@ async function loadFavorites() {
     const user = JSON.parse(userData);
     try {
         const response = await fetch(
-            `https://techcompare-1.onrender.com/api/favorites/${user.id}`
+            `http://localhost:5000/api/favorites/${user.id}`
         );
         const data = await response.json();
         if (!response.ok) {
@@ -90,7 +90,7 @@ async function removeFavorite(productId) {
     const user = JSON.parse(userData);
     try {
         const response = await fetch(
-            "https://techcompare-1.onrender.com/api/favorites",
+            "http://localhost:5000/api/favorites",
             {
                 method: "DELETE",
                 headers: {

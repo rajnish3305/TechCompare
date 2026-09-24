@@ -24,12 +24,8 @@ const productSchema = new mongoose.Schema({
         type: String
     },
     specifications: {
-        ram: String,
-        storage: String,
-        processor: String,
-        battery: String,
-        display: String,
-        camera: String
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
     }
 });
 

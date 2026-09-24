@@ -54,7 +54,36 @@
                     </h2>
                 </div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    💰
+                </div>
+                <div>
+                    <p>Average Price</p>
+                    <h2 id="averagePrice">
+                        ₹0
+                    </h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    ⭐
+                </div>
+                <div>
+                    <p>Highest Rated</p>
+                    <h2 id="highestRated">
+                        -
+                    </h2>
+                </div>
+            </div>
         </section>
+        <section class="analytics-section">
+            <h2>📊 Category Analytics</h2>
+            <div id="categoryAnalytics">
+                Loading...
+            </div>
+        </section>
+
         <!-- ADD PRODUCT -->
         <section class="admin-section">
             <h2>
@@ -73,12 +102,12 @@
                     placeholder="Brand"
                     required
                 >
-                <input
-                    type="text"
-                    id="category"
-                    placeholder="Category"
-                    required
-                >
+                <select  id="category">
+                    <option value="">Select Category</option>
+                    <option value="Smartphone">Smartphone</option>
+                    <option value="Laptop">Laptop</option>
+                    <option value="Headphone">Headphone</option>
+                </select>
                 <input
                     type="number"
                     id="price"
@@ -108,39 +137,7 @@
                         alt="Product Preview"
                     >
                 </div>
-                <h3>
-                    Specifications
-                </h3>
-                <input
-                    type="text"
-                    id="ram"
-                    placeholder="RAM"
-                >
-                <input
-                    type="text"
-                    id="storage"
-                    placeholder="Storage"
-                >
-                <input
-                    type="text"
-                    id="processor"
-                    placeholder="Processor"
-                >
-                <input
-                    type="text"
-                    id="battery"
-                    placeholder="Battery"
-                >
-                <input
-                    type="text"
-                    id="display"
-                    placeholder="Display"
-                >
-                <input
-                    type="text"
-                    id="camera"
-                    placeholder="Camera"
-                >
+                <div id="specificationsContainer"></div>
                 <button type="submit">
                     Add Product
                 </button>
@@ -182,6 +179,17 @@
                     Loading products...
                 </p>
             </div>
+            <div id="pagination">
+                <button id="prevPage">
+                    ← Previous
+                </button>
+                <span id="pageInfo">
+                    Page 1
+                </span>
+                <button id="nextPage">
+                    Next →
+                </button>
+            </div>
         </section>
 
         <!-- EDIT PRODUCT MODAL -->
@@ -205,12 +213,12 @@
                         placeholder="Brand"
                         required
                     >
-                    <input
-                        type="text"
-                        id="editCategory"
-                        placeholder="Category"
-                        required
-                    >
+                    <select  id="editCategory">
+                        <option value="">Select Category</option>
+                        <option value="Smartphone">Smartphone</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Headphone">Headphone</option>
+                    </select>
                     <input
                         type="number"
                         id="editPrice"
@@ -235,37 +243,8 @@
                         src=""
                         alt="Product Preview"
                     >
-                    <h3>Specifications</h3>
-                    <input
-                        type="text"
-                        id="editRam"
-                        placeholder="RAM"
-                    >
-                    <input
-                        type="text"
-                        id="editStorage"
-                        placeholder="Storage"
-                    >
-                    <input
-                        type="text"
-                        id="editProcessor"
-                        placeholder="Processor"
-                    >
-                    <input
-                        type="text"
-                        id="editBattery"
-                        placeholder="Battery"
-                    >
-                    <input
-                        type="text"
-                        id="editDisplay"
-                        placeholder="Display"
-                    >
-                    <input
-                        type="text"
-                        id="editCamera"
-                        placeholder="Camera"
-                    >
+                    <div id="editSpecificationsContainer"></div>
+                    <div id="editModal"></div>
                     <div class="edit-modal-buttons">
                         <button type="submit">
                             Update Product

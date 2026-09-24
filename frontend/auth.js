@@ -11,7 +11,7 @@ if (registerForm) {
         message.style.color = "black";
         try {
             const response = await fetch(
-                "https://techcompare-1.onrender.com/api/register",
+                "http://localhost:5000/api/register",
                 {
                     method: "POST",
                     headers: {
@@ -53,7 +53,7 @@ if (loginForm) {
         message.style.color = "black";
         try {
             const response = await fetch(
-                "https://techcompare-1.onrender.com/api/login",
+                "http://localhost:5000/api/login",
                 {
                     method: "POST",
                     headers: {

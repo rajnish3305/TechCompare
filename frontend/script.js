@@ -1,48 +1,98 @@
 let allProducts = [];
 let compareProducts = [];
-fetch("https://techcompare-1.onrender.com/api/products")
-
+let favoriteProductIds = new Set();
+fetch("http://localhost:5000/api/products")
     .then(response => response.json())
-
     .then(products => {
         allProducts = products;
-
         showProducts(allProducts);
-
     })
     .catch(error => {
         console.error("Error:", error);
     });
-
 function showProducts(products) {
     const container = document.getElementById("products");
     container.innerHTML = "";
     products.forEach(product => {
+        const isFavorite = favoriteProductIds.has(product._id);
+        const specs = product.specifications || {};
+        // Dynamic specifications
+        let specificationHTML = "";
+        Object.entries(specs).forEach(([key, value]) => {
+            // Empty/null values skip
+            if (
+                value === null ||
+                value === undefined ||
+                value === ""
+            ) {
+                return;
+            }
+            // camelCase / snake_case ko readable name mein convert
+            const label = key
+                .replace(/([A-Z])/g, " $1")
+                .replace(/[_-]/g, " ")
+                .replace(/\b\w/g, letter => letter.toUpperCase());
+            specificationHTML += `
+                <p>
+                    <strong>${label}:</strong>
+                    ${value}
+                </p>
+            `;
+        });
         container.innerHTML += `
             <div class="product-card">
-                <img src="${product.image}" alt="${product.name}">
-                <h2>${product.name}</h2>
-                <p><strong>Brand:</strong> ${product.brand}</p>
-                <p><strong>Category:</strong> ${product.category}</p>
-                <p><strong>Price:</strong> ₹${product.price.toLocaleString("en-IN")}</p>
-                <p><strong>Rating:</strong> ⭐ ${product.rating}</p>
+                <img 
+                    src="${product.image || ''}" 
+                    alt="${product.name || 'Product'}"
+                >
+                <h2>${product.name || 'N/A'}</h2>
+                <p>
+                    <strong>Brand:</strong>
+                    ${product.brand || 'N/A'}
+                </p>
+                <p>
+                    <strong>Category:</strong>
+                    ${product.category || 'N/A'}
+                </p>
+                <p>
+                    <strong>Price:</strong>
+                    ₹${Number(product.price || 0).toLocaleString("en-IN")}
+                </p>
+                <p>
+                    <strong>Rating:</strong>
+                    ⭐ ${product.rating ?? 'N/A'}
+                </p>
                 <hr>
-                <p><strong>RAM:</strong> ${product.specifications.ram}</p>
-                <p><strong>Storage:</strong> ${product.specifications.storage}</p>
-                <p><strong>Processor:</strong> ${product.specifications.processor}</p>
-                <p><strong>Battery:</strong> ${product.specifications.battery}</p>
-                <button class="favorite-button"
-                    onclick="addToFavorites('${product._id}')">❤️ Favorite
+                <div class="product-specifications">
+                    ${specificationHTML}
+                </div>
+                <button 
+                    class="favorite-button"
+                    id="favorite-${product._id}"
+                    onclick="toggleFavorite('${product._id}')"
+                >
+                    <span class="favorite-icon">
+                    ${isFavorite ? "❤️":"🤍"}
+                    </span> Favorite
                 </button>
-                <button onclick="addToCompare('${product._id}')" ${compareProducts.some(p => p._id === product._id) ? "disabled" : ""}>
-                    ${compareProducts.some(p => p._id === product._id) ? "✓ Added" : "Add to Compare"}
+                <button
+                    onclick="addToCompare('${product._id}')"
+                    ${compareProducts.some(
+                        p => p._id === product._id
+                    ) ? "disabled" : ""}
+                >
+                    ${
+                        compareProducts.some(
+                            p => p._id === product._id
+                        )
+                        ? "✓ Added"
+                        : "Add to Compare"
+                    }
                 </button>
             </div>
         `;
     });
 }
-// product ko search ke liye 
-// Search + Category Filter
 
 function filterProducts() {
     const searchText = document.getElementById("searchInput").value.toLowerCase();
@@ -95,7 +145,6 @@ function addToCompare(productId) {
     updateCompareBox();
 }
 
-
 function updateCompareBox() {
     const container = document.getElementById("compareList");
     const count = document.getElementById("compareCount");
@@ -138,102 +187,22 @@ function removeFromCompare(productId) {
     updateCompareBox();
 }
 
-// function showComparison() {
-//     if (compareProducts.length < 2) {
-//         alert("Please select at least 2 products.");
-//         return;
-//     }
-//     const container =  document.getElementById("comparisonTable");
-//     let table = `
-//         <h2>Product Comparison</h2>
-//         <div class="table-container">
-//         <table>
-//             <thead>
-//                 <tr>
-//                     <th>Specification</th>
-//     `;
-//     // Product names
-//     compareProducts.forEach(product => {
-//         table += `
-//             <th>${product.name}</th>
-//         `;
-//     });
-//     table += `
-//                 </tr>
-//             </thead>
-//             <tbody>
-//     `;
-//     // Price
-//     table += createComparisonRow(
-//         "Price",
-//         compareProducts.map(product =>
-//             "₹" + product.price.toLocaleString("en-IN")
-//         )
-//     );
-//     // Rating
-//     table += createComparisonRow(
-//         "Rating",
-//         compareProducts.map(product =>
-//             "⭐ " + product.rating
-//         )
-//     );
-//     // RAM
-//     table += createComparisonRow(
-//         "RAM",
-//         compareProducts.map(product =>
-//             product.specifications.ram
-//         )
-//     );
-//     // Storage
-//     table += createComparisonRow(
-//         "Storage",
-//         compareProducts.map(product =>
-//             product.specifications.storage
-//         )
-//     );
-//     // Processor
-//     table += createComparisonRow(
-//         "Processor",
-//         compareProducts.map(product =>
-//             product.specifications.processor
-//         )
-//     );
-//     // Battery
-//     table += createComparisonRow(
-//         "Battery",
-//         compareProducts.map(product =>
-//             product.specifications.battery
-//         )
-//     );
-//     // Display
-//     table += createComparisonRow(
-//         "Display",
-//         compareProducts.map(product =>
-//             product.specifications.display
-//         )
-//     );
-//     // Camera
-//     table += createComparisonRow(
-//         "Camera",
-//         compareProducts.map(product =>
-//             product.specifications.camera
-//         )
-//     );
-//     table += `
-//             </tbody>
-//         </table>
-//         </div>
-//     `;
-//     container.innerHTML = table;
-// }
-
 function showComparison() {
-    // At least 2 products required
     if (compareProducts.length < 2) {
         alert("Please select at least 2 products.");
         return;
     }
     const container = document.getElementById("comparisonTable");
+    // STEP 1: Collect ALL specification keys
+    const specificationKeys = new Set();
+    compareProducts.forEach(product => {
+        const specs = product.specifications || {};
+        Object.keys(specs).forEach(key => {
+            specificationKeys.add(key);
+        });
+    });
+    const allSpecificationKeys = [...specificationKeys];
+    // STEP 2: Create table
     let table = `
         <h2>Product Comparison</h2>
         <div class="table-container">
@@ -242,11 +211,11 @@ function showComparison() {
                     <tr>
                         <th>Specification</th>
     `;
-    // Product Names
+    // Product names
     compareProducts.forEach(product => {
         table += `
             <th>
-                ${product.name}
+                ${product.name || "N/A"}
             </th>
         `;
     });
@@ -255,132 +224,133 @@ function showComparison() {
                 </thead>
                 <tbody>
     `;
-    // Price
-    // Lower price = Better
+    // STEP 3: Price
     table += createComparisonRow(
         "Price",
-        compareProducts.map(product =>
-            "₹" + product.price.toLocaleString("en-IN")
-        ),
+        compareProducts.map(product => {
+            if (
+                product.price === undefined ||
+                product.price === null ||
+                product.price === ""
+            ) {
+                return "N/A";
+            }
+            return "₹" +
+                Number(product.price).toLocaleString("en-IN");
+        }),
         "lower"
     );
-    // Rating
-    // Higher rating = Better
+    // STEP 4: Rating
     table += createComparisonRow(
         "Rating",
-        compareProducts.map(product =>
-            "⭐ " + product.rating
-        ),
-        "higher"
-    );
-    // RAM
-    // Higher RAM = Better
-    table += createComparisonRow(
-        "RAM",
-        compareProducts.map(product =>
-            product.specifications.ram
-        ),
-        "higher"
-    );
-    // Storage
-    // Higher Storage = Better
-    table += createComparisonRow(
-        "Storage",
-        compareProducts.map(product =>
-            product.specifications.storage
-        ),
-        "higher"
-    );
-    // Processor
-    // Processor Score = Better
-    table += createComparisonRow(
-        "Processor",
         compareProducts.map(product => {
-            const processor = product.specifications.processor || "N/A";
-            const score = product.specifications.processorScore;
-            return score !== undefined ? `${processor} (${score})` : processor;
+            if (
+                product.rating === undefined ||
+                product.rating === null ||
+                product.rating === ""
+            ) {
+                return "N/A";
+            }
+            return "⭐ " + product.rating;
         }),
-        "processor"
-    );
-    // Battery
-    // Higher Battery = Better
-    table += createComparisonRow(
-        "Battery",
-        compareProducts.map(product =>
-            product.specifications.battery
-        ),
         "higher"
     );
-    // Display
-    // Higher Display Size = Better
-    table += createComparisonRow(
-        "Display",
-        compareProducts.map(product =>
-            product.specifications.display
-        ),
-        "higher"
-    );
-    // Camera
-    // Higher MP = Better
-    table += createComparisonRow(
-        "Camera",
-        compareProducts.map(product =>
-            product.specifications.camera
-        ),
-        "higher"
-    );
-    // Close Table
+    // STEP 5: ALL dynamic specifications
+    allSpecificationKeys.forEach(key => {
+        const values = compareProducts.map(product => {
+            const specs = product.specifications || {};
+            const value = specs[key];
+            // Product me specification nahi hai
+            if (
+                value === undefined ||
+                value === null ||
+                value === ""
+            ) {
+                return "N/A";
+            }
+            return value;
+        });
+        // Decide whether numeric comparison
+        const lowerKey = key.toLowerCase();
+        let comparisonType = "none";
+        // Higher value generally considered better
+        if (
+            lowerKey.includes("ram") ||
+            lowerKey.includes("storage") ||
+            lowerKey.includes("battery") ||
+            lowerKey.includes("camera") ||
+            lowerKey.includes("driver")
+        ) {
+            comparisonType = "higher";
+        }
+        // Lower weight generally better
+        else if (
+            lowerKey.includes("weight")
+        ) {
+            comparisonType = "lower";
+        }
+        // Add row
+        table += createComparisonRow(
+            formatSpecificationName(key),
+            values,
+            comparisonType
+        );
+    });
+    // STEP 6: Close table
     table += `
                 </tbody>
             </table>
         </div>
     `;
-    // Show table on page
+    // Show table
     container.innerHTML = table;
+    // Show recommendations
     showRecommendations();
 }
 
-// function createComparisonRow(title, values) {
-//     let row = `
-//         <tr>
-//             <th>${title}</th>
-//     `;
-//     values.forEach(value => {
-//         row += `
-//             <td>${value}</td>
-//         `;
-//     });
-//     row += `
-//         </tr>
-//     `;
-//     return row;
-// }
-
-function createComparisonRow(title, values, better = "higher") {
-    // Values se number extract karo
+function createComparisonRow(title, values, better = "none") {
+    // Convert values to numbers where possible
     const numbers = values.map(value => {
-        const match = String(value).replace(/,/g, "").match(/[\d.]+/);
+        if (
+            value === null ||
+            value === undefined ||
+            value === "N/A"
+        ) {
+            return NaN;
+        }
+        const match = String(value)
+            .replace(/,/g, "")
+            .match(/[\d.]+/);
         return match ? parseFloat(match[0]) : NaN;
     });
-    // Sirf valid numbers
-    const validNumbers = numbers.filter(number => !isNaN(number));
+    // Find best value only when comparison
+    // is meaningful
     let bestValue = null;
-    // Best value calculate karo
-    if (validNumbers.length > 0) {
-        if (better === "lower") {
-            bestValue = Math.min(...validNumbers);
-        } 
-        else {
-            bestValue = Math.max(...validNumbers);
+    if (
+        better === "higher" ||
+        better === "lower"
+    ) {
+        const validNumbers = numbers.filter(number => !isNaN(number));
+        if (validNumbers.length > 0) {
+            if (better === "higher") {
+                bestValue = Math.max(...validNumbers);
+            } else {
+                bestValue = Math.min(...validNumbers);
+            }
         }
     }
+     // Create table row    
     let row = `
         <tr>
-            <th>${title}</th>
+            <th>
+                ${title}
+            </th>
     `;
-    // Har product ka cell
     values.forEach((value, index) => {
-        const isBest = !isNaN(numbers[index]) && numbers[index] === bestValue;
+        const isBest =
+            bestValue !== null &&
+            !isNaN(numbers[index]) &&
+            numbers[index] === bestValue;
         row += `
             <td class="${isBest ? "best-value" : ""}">
                 ${value}
@@ -393,9 +363,16 @@ function createComparisonRow(title, values, better = "higher") {
     return row;
 }
 
+function formatSpecificationName(key) {
+    return key
+        .replace(/([A-Z])/g, " $1")
+        .replace(/[_-]/g, " ")
+        .replace(/\b\w/g, letter => letter.toUpperCase())
+        .trim();
+}
+
 function showRecommendations() {
-    const container =
-        document.getElementById("recommendationSection");
+    const container = document.getElementById("recommendationSection");
     if (!container) {
         return;
     }
@@ -403,65 +380,253 @@ function showRecommendations() {
         container.innerHTML = "";
         return;
     }
-    // Lowest Price
+    // Get categories
+    const categories = [
+        ...new Set(
+            compareProducts
+                .map(product => product.category)
+                .filter(Boolean)
+        )
+    ];
+    // Check whether all selected products belong to same category
+    const sameCategory = categories.length === 1;
+    // Common recommendations
+    const productsWithPrice = compareProducts.filter(
+        product =>
+            product.price !== undefined &&
+            product.price !== null &&
+            product.price !== ""
+    );
+    const productsWithRating = compareProducts.filter(
+        product =>
+            product.rating !== undefined &&
+            product.rating !== null &&
+            product.rating !== ""
+    );
     const lowestPrice =
-        [...compareProducts].sort(
-            (a, b) => a.price - b.price
-        )[0];
-    // Highest Rating
+        productsWithPrice.length > 0
+            ? [...productsWithPrice].sort(
+                (a, b) => Number(a.price) - Number(b.price)
+            )[0]
+            : null;
     const highestRating =
-        [...compareProducts].sort(
-            (a, b) => b.rating - a.rating
-        )[0];
-    // Highest RAM
-    const highestRam =
-        [...compareProducts].sort(
-            (a, b) => getNumber(a.specifications.ram)
-                   - getNumber(b.specifications.ram)
-        )[compareProducts.length - 1];
-    // Highest Battery
-    const highestBattery =
-        [...compareProducts].sort(
-            (a, b) => getNumber(a.specifications.battery)
-                   - getNumber(b.specifications.battery)
-        )[compareProducts.length - 1];
-    container.innerHTML = `
+        productsWithRating.length > 0
+            ? [...productsWithRating].sort(
+                (a, b) => Number(b.rating) - Number(a.rating)
+            )[0]
+            : null;
+    let insights = "";
+    // MIXED CATEGORY
+    if (!sameCategory) {
+        insights = `
+            ${
+                lowestPrice
+                    ? `
+                    <div class="insight-card">
+                        <h3>💰 Lowest Price</h3>
+                        <p>${lowestPrice.name}</p>
+                        <strong>
+                            ₹${Number(
+                                lowestPrice.price
+                            ).toLocaleString("en-IN")}
+                        </strong>
+                    </div>
+                    `
+                    : ""
+            }
+            ${
+                highestRating
+                    ? `
+                    <div class="insight-card">
+                        <h3>⭐ Highest Rated</h3>
+                        <p>${highestRating.name}</p>
+                        <strong>
+                            ⭐ ${highestRating.rating}
+                        </strong>
+                    </div>
+                    `
+                    : ""
+            }
+        `;
+    }
+    // SAME CATEGORY
+    else {
+        const category = categories[0];
+        let highestRam = null;
+        let highestStorage = null;
+        let highestBattery = null;
+        // 📱 PHONE
+        if (category === "Smartphone") {
+            const ramProducts = compareProducts.filter(
+                product =>
+                    product.specifications?.ram
+            );
+            const batteryProducts = compareProducts.filter(
+                product =>
+                    product.specifications?.battery
+            );
+            highestRam =
+                ramProducts.length > 0
+                    ? [...ramProducts].sort(
+                        (a, b) =>
+                            parseFloat(
+                                b.specifications.ram
+                            ) -
+                            parseFloat(
+                                a.specifications.ram
+                            )
+                    )[0]
+                    : null;
+            highestBattery =
+                batteryProducts.length > 0
+                    ? [...batteryProducts].sort(
+                        (a, b) =>
+                            parseFloat(
+                                b.specifications.battery
+                            ) -
+                            parseFloat(
+                                a.specifications.battery
+                            )
+                    )[0]
+                    : null;
+        }
+        // 💻 LAPTOP
+        if (category === "Laptop") {
+            const ramProducts = compareProducts.filter(
+                product =>
+                    product.specifications?.ram
+            );
+            const storageProducts = compareProducts.filter(
+                product =>
+                    product.specifications?.storage
+            );
+            highestRam =
+                ramProducts.length > 0
+                    ? [...ramProducts].sort(
+                        (a, b) =>
+                            parseFloat(
+                                b.specifications.ram
+                            ) -
+                            parseFloat(
+                                a.specifications.ram
+                            )
+                    )[0]
+                    : null;
+            highestStorage =
+                storageProducts.length > 0
+                    ? [...storageProducts].sort(
+                        (a, b) =>
+                            parseFloat(
+                                b.specifications.storage
+                            ) -
+                            parseFloat(
+                                a.specifications.storage
+                            )
+                    )[0]
+                    : null;
+        }
+        // 🎧 HEADPHONE
+        if (category === "Headphone") {
+            const batteryProducts = compareProducts.filter(
+                product =>
+                    product.specifications?.battery
+            );
+            highestBattery =
+                batteryProducts.length > 0
+                    ? [...batteryProducts].sort(
+                        (a, b) =>
+                            parseFloat(
+                                b.specifications.battery
+                            ) -
+                            parseFloat(
+                                a.specifications.battery
+                            )
+                    )[0]
+                    : null;
+        }
+        insights = `
+            ${
+                lowestPrice
+                    ? `
+                    <div class="insight-card">
+                        <h3>💰 Lowest Price</h3>
+                        <p>${lowestPrice.name}</p>
+                        <strong>
+                            ₹${Number(
+                                lowestPrice.price
+                            ).toLocaleString("en-IN")}
+                        </strong>
+                    </div>
+                    `
+                    : ""
+            }
+            ${
+                highestRating
+                    ? `
+                    <div class="insight-card">
+                        <h3>⭐ Highest Rated</h3>
+                        <p>${highestRating.name}</p>
+                        <strong>
+                            ⭐ ${highestRating.rating}
+                        </strong>
+                    </div>
+                    `
+                    : ""
+            }
+            ${
+                highestRam
+                    ? `
+                    <div class="insight-card">
+                        <h3>🧠 Highest RAM</h3>
+                        <p>${highestRam.name}</p>
+                        <strong>
+                            ${highestRam.specifications.ram}
+                        </strong>
+                    </div>
+                    `
+                    : ""
+            }
+            ${
+                highestStorage
+                    ? `
+                    <div class="insight-card">
+                        <h3>💾 Highest Storage</h3>
+                        <p>${highestStorage.name}</p>
+                        <strong>
+                            ${highestStorage.specifications.storage}
+                        </strong>
+                    </div>
+                    `
+                    : ""
+            }
 
+            ${
+                highestBattery
+                    ? `
+                    <div class="insight-card">
+                        <h3>🔋 Highest Battery</h3>
+                        <p>${highestBattery.name}</p>
+                        <strong>
+                            ${highestBattery.specifications.battery}
+                        </strong>
+                    </div>
+                    `
+                    : ""
+            }
+        `;
+    }
+
+    container.innerHTML = `
         <div class="recommendation-box">
             <h2>🤖 Comparison Insights</h2>
+
             <div class="insight-grid">
-                <div class="insight-card">
-                    <h3>💰 Lowest Price</h3>
-                    <p>${lowestPrice.name}</p>
-                    <strong>
-                        ₹${lowestPrice.price.toLocaleString("en-IN")}
-                    </strong>
-                </div>
-                <div class="insight-card">
-                    <h3>⭐ Highest Rated</h3>
-                    <p>${highestRating.name}</p>
-                    <strong>
-                        ⭐ ${highestRating.rating}
-                    </strong>
-                </div>
-                <div class="insight-card">
-                    <h3>💾 Highest RAM</h3>
-                    <p>${highestRam.name}</p>
-                    <strong>
-                        ${highestRam.specifications.ram}
-                    </strong>
-                </div>
-                <div class="insight-card">
-                    <h3>🔋 Highest Battery</h3>
-                    <p>${highestBattery.name}</p>
-                    <strong>
-                        ${highestBattery.specifications.battery}
-                    </strong>
-                </div>
+                ${insights}
             </div>
         </div>
     `;
 }
+
 function getNumber(value) {
     return parseFloat(String(value).replace(/[^0-9.]/g, "")) || 0;
 }
@@ -516,7 +681,7 @@ async function addToFavorites(productId) {
     const user = JSON.parse(userData);
     try {
         const response = await fetch(
-            "https://techcompare-1.onrender.com/api/favorites",
+            "http://localhost:5000/api/favorites",
             {
                 method: "POST",
                 headers: {
@@ -531,14 +696,17 @@ async function addToFavorites(productId) {
         const data = await response.json();
         if (response.ok) {
             alert("❤️ Product added to favorites!");
+            return true;
         } else {
             alert(data.message);
+            return false;
         }
     } catch (error) {
         console.log(error);
         alert("Server connection failed.");
     }
 }
+
 async function removeFromFavorites(productId) {
     const userData = localStorage.getItem("loggedInUser");
     if (!userData) {
@@ -549,7 +717,7 @@ async function removeFromFavorites(productId) {
     const user = JSON.parse(userData);
     try {
         const response = await fetch(
-            "https://techcompare-1.onrender.com/api/favorites",
+            "http://localhost:5000/api/favorites",
             {
                 method: "DELETE",
                 headers: {
@@ -564,11 +732,96 @@ async function removeFromFavorites(productId) {
         const data = await response.json();
         if (response.ok) {
             alert("💔 Product removed from favorites!");
+            return true;
         } else {
             alert(data.message);
+            return false;
         }
     } catch (error) {
         console.log(error);
         alert("Server connection failed.");
     }
 }
+
+async function toggleFavorite(productId) {
+    const userData = localStorage.getItem("loggedInUser");
+    if(!userData){
+        alert("Please login first.");
+        window.location.href="login.html";
+        return;
+    }
+    const button = document.getElementById(`favorite-${productId}`);
+
+    if (!button) return;
+
+    const icon = button.querySelector(".favorite-icon");
+
+    // Check current state
+    const isFavorite = button.classList.contains("favorited");
+
+    if (isFavorite) {
+        const sucess = await removeFromFavorites(productId);
+        if(sucess){
+            favoriteProductIds.delete(productId);
+            icon.textContent = "🤍";
+        }
+        
+    } else {
+        const sucess = await addToFavorites(productId);
+        if(sucess){
+            favoriteProductIds.add(productId);
+            icon.textContent = "❤️";
+        }
+    }
+}
+
+async function loadFavorites() {
+    const userData = localStorage.getItem("loggedInUser");
+    if (!userData) {
+        favoriteProductIds = new Set();
+        return;
+    }
+    const user = JSON.parse(userData);
+    try {
+        const response = await fetch(
+            `http://localhost:5000/api/favorites/${user.id}`
+        );
+        if (!response.ok) {
+            return;
+        }
+        const data = await response.json();
+        const favorites = data.favorites || [];
+        favoriteProductIds = new Set(
+            favorites.map(favorite => {
+                // populated product
+                if (favorite._id) {
+                    return favorite._id;
+                }
+                // if favorite is an object containing productId
+                if (favorite.productId?._id) {
+                    return favorite.productId._id;
+                }
+                // if productId is just an ID
+                return favorite.productId;
+            })
+        );
+    } catch (error) {
+        console.error("Error loading favorites:", error);
+    }
+}
+
+async function loadProducts() {
+    try {
+        // First load user's favorites
+        await loadFavorites();
+        const response = await fetch(
+            "http://localhost:5000/api/products"
+        );
+        const products = await response.json();
+        allProducts = products;
+        showProducts(allProducts);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+loadProducts();
